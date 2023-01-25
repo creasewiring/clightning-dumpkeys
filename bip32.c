@@ -451,7 +451,7 @@ int bip32_key_from_parent(const secp256k1_context *ctx,
          * (NOTE: privkey_tweak_add checks both conditions)
          */
         memcpy(key_out->priv_key, hdkey->priv_key, sizeof(hdkey->priv_key));
-        if (!secp256k1_ec_privkey_tweak_add(ctx, key_out->priv_key + 1,
+        if (!secp256k1_ec_seckey_tweak_add(ctx, key_out->priv_key + 1,
 					    hmac.sha.u.u8)) {
             memclear(&hmac.sha, sizeof(hmac.sha));
             return wipe_key_fail(key_out); /* Out of bounds FIXME: Iterate to the next? */
@@ -474,7 +474,7 @@ int bip32_key_from_parent(const secp256k1_context *ctx,
         if (!secp256k1_ec_pubkey_parse(ctx, &pub_key, hdkey->pub_key,
                           sizeof(hdkey->pub_key)) ||
 
-            !secp256k1_ec_privkey_tweak_add(ctx, pub_key.data,
+            !secp256k1_ec_seckey_tweak_add(ctx, pub_key.data,
 					    hmac.sha.u.u8) ||
 
             !secp256k1_ec_pubkey_serialize(ctx, key_out->pub_key,
